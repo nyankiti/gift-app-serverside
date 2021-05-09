@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FetchArticlesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/fetch_articles', [FetchArticlesController::class, 'index']);
+
 Route::get('/insert', function () {
     $stuRef = app('firebase.firestore')->database()->collection('student')->newDocument();
     $stuRef->set([
@@ -31,3 +34,4 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::post('login/{provider}/callback', 'Auth\LoginController@handleCallback');
+
