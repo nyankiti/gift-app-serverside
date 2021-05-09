@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Kreait\Firebase\Auth as FirebaseAuth;
 use Kreait\Firebase\Exception\FirebaseException;
 use Illuminate\Validation\ValidationException;
+use Kreait\Firebase\Auth\SignInResult\SignInResult;
+use Session;
 
 use Auth;
 use App\Models\User;
@@ -49,6 +51,12 @@ class LoginController extends Controller
         try {
             $signInResult = $this->auth->signInWithEmailAndPassword($request['email'], $request['password']);
             $user = new User($signInResult->data());
+
+            //firebase authenticationのuidを sessionに登録しておく
+            $loginuid = $signInResult->firebaseUserId();
+            Session::put('uid', $loginuid);
+            // dd(Session::get('uid'));
+
             $result = Auth::login($user);
             return redirect($this->redirectPath());
         } catch (FirebaseException $e) {
