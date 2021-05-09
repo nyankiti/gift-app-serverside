@@ -17,6 +17,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/insert', function () {
+    $stuRef = app('firebase.firestore')->database()->collection('student')->newDocument();
+    $stuRef->set([
+        'firstname' => 'Seven',
+        'lastname' => 'Stac',
+        'age' => 19
+    ]);
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
