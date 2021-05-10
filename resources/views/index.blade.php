@@ -14,6 +14,7 @@
         </div>
     </div>
 
+
     <div class='sm:grid grid-cols-2 gap-20 w-4/5 mx-auto py-15 border-b border-grat-200'>
         <div>
             <img src='https://cdn.pixabay.com/photo/2017/05/12/08/29/coffee-2306471_960_720.jpg' width='700' alt='' />

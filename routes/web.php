@@ -21,7 +21,7 @@ Route::get('/', function () {
 });
 
 Route::get('/index',  [PagesController::class, 'index']);
-Route::get('/blog', [PostsController::class]);
+Route::resource('/blog', PostsController::class);
 
 Route::get('/fetch_articles', [FetchArticlesController::class, 'index']);
 
