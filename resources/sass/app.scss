@@ -1,8 +1,22 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+// // Fonts
+// @import url('https://fonts.googleapis.com/css?family=Nunito');
 
-// Variables
-@import 'variables';
+// // Variables
+// @import 'variables';
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+// // Bootstrap
+// @import '~bootstrap/scss/bootstrap';
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.background-image {
+    background-image: url("https://cdn.pixabay.com/photo/2021/05/04/21/09/mountains-6229703_960_720.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 600px;
+}
