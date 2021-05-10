@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FetchArticlesController;
+use App\Http\Controllers\PagesController;
+use App\Http\Controllers\PostsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +19,9 @@ use App\Http\Controllers\FetchArticlesController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/index',  [PagesController::class, 'index']);
+Route::get('/blog', [PostsController::class]);
 
 Route::get('/fetch_articles', [FetchArticlesController::class, 'index']);
 

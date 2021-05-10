@@ -53,22 +53,22 @@
                                 </li>
                             @endif
                         @else
-                          <li class="nav-item">
-                              <a class="nav-link" href="#">{{ Auth::user()->name }}</a>
-                          </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">{{ Auth::user()->name }}</a>
+                            </li>
 
-                          <li class="nav-item">
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
+                            <li class="nav-item">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
-                              </li>
+                                </li>
                             </div>
-                          </li>
+                            </li>
                         @endguest
                     </ul>
                 </div>
@@ -78,6 +78,9 @@
         <main class="py-4">
             @yield('content')
         </main>
+        <div>
+            @include('layouts.footer')
+        </div>
     </div>
 </body>
 </html>
