@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/index',  [PagesController::class, 'index']);
+Route::get('/home',  [PagesController::class, 'index']);
 Route::resource('/blog', PostsController::class);
 
 Route::get('/fetch_articles', [FetchArticlesController::class, 'index']);
@@ -36,7 +36,7 @@ Route::get('/insert', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/default_home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::post('login/{provider}/callback', 'Auth\LoginController@handleCallback');
 

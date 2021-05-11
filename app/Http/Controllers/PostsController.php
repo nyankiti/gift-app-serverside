@@ -9,6 +9,14 @@ use \Cviebrock\EloquentSluggable\Services\SlugService;
 
 class PostsController extends Controller
 {
+    public function __construct()
+    {
+        // このControllerを通る処理でindexとshowメソッドくぉ除いて、auth middlewareを通すことで、
+        // ログインしていないユーザーのリクエストを制限する
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -71,7 +79,7 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  istrign  $slug
      * @return \Illuminate\Http\Response
      */
     public function show($slug)
@@ -83,7 +91,7 @@ class PostsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  istring  $slug
      * @return \Illuminate\Http\Response
      */
     public function edit($slug)
@@ -96,22 +104,38 @@ class PostsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  strign  $slug
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+        ]);
+
+        Post::where('slug', $slug)->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'slug' => $slug,
+            // 'image_path' => $newImageName,
+            'user_id' => \Auth::user()->getAuthIdentifier()
+        ]);
+
+        return redirect('/blog')->with('message', 'Your post has been updated!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
-        //
+        $post = Post::where('slug', $slug);
+        $post->delete();
+
+        return redirect('/blog')->with('message', 'You post has been deleted!' );
     }
 }

@@ -58,7 +58,7 @@ class LoginController extends Controller
             // dd(Session::get('uid'));
 
             $result = Auth::login($user);
-            return redirect($this->redirectPath());
+            return redirect($this->redirectPath())->with('message', 'You are logged in!');
         } catch (FirebaseException $e) {
             throw ValidationException::withMessages([$this->username() => [trans('auth.failed')],]);
         }

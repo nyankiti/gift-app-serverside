@@ -6,7 +6,7 @@
             </h3>
             <ul class='py-4 sm:text-s pt-4 text-gray-400'>
                 <li class='pb-1'>
-                    <a href='/index'>
+                    <a href='/home'>
                         Home
                     </a>
                 </li>

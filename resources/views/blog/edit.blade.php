@@ -28,14 +28,6 @@
 
         <textarea name='description' placeholder='Description...' class='py-20 bg-transparent block border-b-2 w-full h-60 text-xl outline-none' > {{ $post->description }} </textarea>
 
-        <div class='bg-gray-lighter pt-15'>
-            <lavel class='w-44 flex flex-col items-center px-2 py-3 bg-white-rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer'>
-                <span class='mt-2 text-base leading-nomal'>
-                    Select a file
-                </span>
-                <input type='file' name='image' >
-            </lavel>
-        </div>
 
         <button type='submit' class='uppercase bg-blue-500 text-gray-100 text-lg font-extrabold mt-16 py-4 px-8 rounded-3xl'>
             Submit Post
