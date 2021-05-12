@@ -9,6 +9,7 @@ use \Cviebrock\EloquentSluggable\Services\SlugService;
 
 class PostsController extends Controller
 {
+
     public function __construct()
     {
         // このControllerを通る処理でindexとshowメソッドくぉ除いて、auth middlewareを通すことで、
@@ -24,9 +25,17 @@ class PostsController extends Controller
      */
     public function index()
     {
-        // $post = Post::all();
-        return view('blog.index')
-            ->with('posts', Post::orderBy('updated_at', 'DESC')->get());
+        // $snapShots = app('firebase.firestore')->database()->collection('news')->offset(6)->limit(6)->orderBy('updated_at', 'DESC')->documents()->rows();
+        $snapShots = app('firebase.firestore')->database()->collection('news')->limit(6)->orderBy('updated_at', 'DESC')->documents()->rows();
+
+        foreach ($snapShots as $key=>$snapShot){
+            $articles[$key] = $snapShot->data();
+        }
+        // dd(Post::orderBy('updated_at', 'DESC')->get());
+
+        // return view('blog.index')
+        //     ->with('posts', Post::orderBy('updated_at', 'DESC')->get());
+        return view('blog.index')->with('posts', $articles);
     }
 
     /**

@@ -28,7 +28,7 @@ class FetchArticlesController extends Controller
         // GiftBlogPageList = [1588494655, 1583932861, 1554912303, 1522322442, 1505971397, 1499956565, 1496681211]
 
         $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', 'https://blog.hatena.ne.jp/seiproject/seiproject.hateblo.jp/atom/entry?page=1616849637', [
+        $res = $client->request('GET', 'https://blog.hatena.ne.jp/seiproject/seiproject.hateblo.jp/atom/entry?page=1499009150', [
             'auth' => ['seiproject', 'tbevqkdqnc']
         ]);
         $xml = simplexml_load_string($res->getBody(),'SimpleXMLElement',LIBXML_NOCDATA);
@@ -44,7 +44,7 @@ class FetchArticlesController extends Controller
 
         // 保存する形式へdateの整形する
         $data = [];
-        // dd($array['entry']);
+
         foreach ($array['entry'] as $key => $value){
             // 下書きの場合はcontinueする
 
@@ -57,11 +57,15 @@ class FetchArticlesController extends Controller
                 continue;
             }
 
+
             $data[$key]['id'] = $value['id'];
             $data[$key]['title'] = $value['title'];
-            $data[$key]['author'] = $value['author'];
+            $data[$key]['author'] = 'Junya';
             $data[$key]['imageUrl'] = $this->extractImageSrc($value['content']);
             $data[$key]['html'] = $value['content'];
+            // 日本語のタイトルの物が多いので、slugはdatestringを渡す 2000-00-00 の形の文字列が格納されている
+            $data[$key]['slug'] = substr($value['updated'], 0, 10);
+            $data[$key]['user_id'] = 'd1SJQ07DeUWVUQ74tNizyrjKR4x1';
             $data[$key]['created_at'] = new Timestamp(new DateTime($value['published']));
             $data[$key]['updated_at'] = new Timestamp(new DateTime($value['updated']));
         }
@@ -69,6 +73,7 @@ class FetchArticlesController extends Controller
         // dd($data);
 
         // firestoreへ保存
+        // webアプリのために追加するべき属性    slug  user_id description?
         foreach ($data as $value){
             $newsRef = app('firebase.firestore')->database()->collection('news')->document($value['id']);
             $newsRef->set([
@@ -76,6 +81,8 @@ class FetchArticlesController extends Controller
                 'author' => $value['author'],
                 'imageUrl' => $value['imageUrl'],
                 'html' => $value['html'],
+                'slug' => $value['slug'],
+                'user_id' => $value['user_id'],
                 'created_at' => $value['created_at'],
                 'updated_at' => $value['updated_at'],
                 ]);
