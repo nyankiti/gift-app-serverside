@@ -36,7 +36,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('blog.create');
+        return view('blog.wysiwygEditor');
     }
 
     /**
@@ -47,6 +47,8 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->input('description'));
+
         $request->validate([
             'title' => 'required',
             'description' => 'required',
