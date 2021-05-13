@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
+use Carbon\Carbon;
 
 
 class PostsController extends Controller
@@ -27,10 +28,12 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
+        // クエリパラメータは以下の様に参照できる
         // dd($request->page);
+        $onLastPage = null;
 
-        // 1ページ目はoffsetがない
-        if($request->page == 1){
+        if($request->page == 1 || !isset($request->page)){
+            $request->page = 1;
             $snapShots = app('firebase.firestore')->database()->collection('news')->limit(6)->orderBy('updated_at', 'DESC')->documents()->rows();
 
             foreach ($snapShots as $key=>$snapShot){
@@ -43,6 +46,13 @@ class PostsController extends Controller
             foreach ($snapShots as $key=>$snapShot){
                 $articles[$key] = $snapShot->data();
             }
+            // 2017年6月22日に投稿された記事が最初から6番目の記事。その時より前の日付の記事が一番目に取れた場合は次のページが存在しなくなる
+            $borderTime = new Carbon('2017-06-23');
+            $fetchedTime = new Carbon($articles[0]['updated_at']);
+            if($fetchedTime->lte($borderTime)){
+                $onLastPage = true;
+            }
+
         }
         // dd(Post::orderBy('updated_at', 'DESC')->get());
 
@@ -50,7 +60,9 @@ class PostsController extends Controller
         //     ->with('posts', Post::orderBy('updated_at', 'DESC')->get());
         return view('blog.index')
             ->with('posts', $articles)
-            ->with('current_page', $request->page);
+            ->with('current_page', $request->page)
+            ->with('onLastPage', $onLastPage);
+
     }
 
     /**
@@ -128,8 +140,11 @@ class PostsController extends Controller
      */
     public function show($slug)
     {
+        $article = app('firebase.firestore')->database()->collection('news')->where('slug', '=', $slug)->documents()->rows()[0]->data();
+
+
         return view('blog.show')
-            ->with('post', Post::where('slug', $slug)->first());
+            ->with('post', $article);
     }
 
     /**
