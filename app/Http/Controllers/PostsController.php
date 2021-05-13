@@ -10,6 +10,8 @@ use \Cviebrock\EloquentSluggable\Services\SlugService;
 class PostsController extends Controller
 {
 
+    // protectedのメンバー変数はこのクラスとこのクラスを継承したクラスのみから使える
+
     public function __construct()
     {
         // このControllerを通る処理でindexとshowメソッドくぉ除いて、auth middlewareを通すことで、
@@ -23,19 +25,32 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $snapShots = app('firebase.firestore')->database()->collection('news')->offset(6)->limit(6)->orderBy('updated_at', 'DESC')->documents()->rows();
-        $snapShots = app('firebase.firestore')->database()->collection('news')->limit(6)->orderBy('updated_at', 'DESC')->documents()->rows();
+        // dd($request->page);
 
-        foreach ($snapShots as $key=>$snapShot){
-            $articles[$key] = $snapShot->data();
+        // 1ページ目はoffsetがない
+        if($request->page == 1){
+            $snapShots = app('firebase.firestore')->database()->collection('news')->limit(6)->orderBy('updated_at', 'DESC')->documents()->rows();
+
+            foreach ($snapShots as $key=>$snapShot){
+                $articles[$key] = $snapShot->data();
+            }
+
+        }else{
+            $snapShots = app('firebase.firestore')->database()->collection('news')->offset(($request->page-1)*6)->limit(6)->orderBy('updated_at', 'DESC')->documents()->rows();
+
+            foreach ($snapShots as $key=>$snapShot){
+                $articles[$key] = $snapShot->data();
+            }
         }
         // dd(Post::orderBy('updated_at', 'DESC')->get());
 
         // return view('blog.index')
         //     ->with('posts', Post::orderBy('updated_at', 'DESC')->get());
-        return view('blog.index')->with('posts', $articles);
+        return view('blog.index')
+            ->with('posts', $articles)
+            ->with('current_page', $request->page);
     }
 
     /**
@@ -56,8 +71,26 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->input('description'));
+        // 入力された画像ファイルはinputとは別で扱われており、$request->image 独自のインスタンスにアクセスできる
+        // ----firestore への保存---------------------------------------------
+        // dd($request->input());
 
+        // $newsRef = app('firebase.firestore')->database()->collection('news')->document();
+
+        // // $stuRef = app('firebase.firestore')->database()->collection('student')->newDocument();
+        // $newsRef->set([
+        //     'title' => $input('title'),
+        //     'author' => '',
+        //     'imageUrl' => $request,
+        //     'html' => $value['html'],
+        //     'slug' => $value['slug'],
+        //     'user_id' => $value['user_id'],
+        //     'created_at' => $value['created_at'],
+        //     'updated_at' => $value['updated_at'],
+        // ]);
+
+
+        // -------------------------------------------------------------------
         $request->validate([
             'title' => 'required',
             'description' => 'required',

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-4/5 m-auto text-center">
-    <div class='py-15 border-b border-gray-200'>
-        <h1 class='text-6xl'>
-            Blog Posts
-        </h1>
+    <div class="w-4/5 m-auto text-center">
+        <div class='py-15 border-b border-gray-200'>
+            <h1 class='text-6xl'>
+                Blog Posts
+            </h1>
+        </div>
     </div>
-</div>
 
 @if(session()->has('message'))
     <div class='w-4/5 m-auto mt-10 pl-2'>
@@ -70,5 +70,50 @@
     </div>
 
 @endforeach
-
+    {{ $current_page }}
+    <div class='flex items-center justify-center'>
+        <div class='text-gray-300 flex items-center space-x-2 select-none'>
+            <button onclick="location.href='/blog?page={{ $current_page-1 }}'" class='h-8 w-8 p-1 hover:bg-gray-700 rounded page-control'><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+            </svg></button>
+            <div class='space-x-1'>
+                <button class='hover:bg-gray-700 px-2 rounded page-item' data-index='0'>1</button>
+                <button class='hover:bg-gray-700 px-2 rounded page-item' data-index='1'>2</button>
+                <button class='hover:bg-gray-700 px-2 rounded page-item' data-index='2'>3</button>
+                <button class='hover:bg-gray-700 px-2 rounded page-item' data-index='3'>4</button>
+            </div>
+            <button onclick="location.href='/blog?page={{ $current_page+1 }}'" class='h-8 w-8 p-1 hover:bg-gray-700 rounded page-control'><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+            </svg></button>
+        </div>
+    </div>
 @endsection
+
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const pageItems = document.querySelectorAll('.page-item')
+        const pageControl = document.querySelectorAll('.page-control')
+        let = activeIdx = 0
+
+        makeActive(pageItems[activeIdx])
+
+        pageItems.forEach(el => {
+            el.addEventListener('click', (event) => {
+                makeInactive(pageItems[activeIdx])
+                activeIdx = event.target.dataset.index
+                makeActive(pageItems[activeIdx])
+            })
+        })
+    })
+
+    function makeActive(el){
+        el.classList.add('bg-gray-300', 'text-gray-800')
+        el.classList.remove('hover:bg-gray-700')
+    }
+
+    function makeInactive(el){
+        el.classList.remove('bg-gray-300', 'text-gray-800')
+        el.classList.add('hover:bg-gray-700')
+    }
+</script>

@@ -11,7 +11,7 @@
                     </a>
                 </li>
                 <li class='pb-1'>
-                    <a href='/blog'>
+                    <a href='/blog?page=1'>
                         Blog
                     </a>
                 </li>

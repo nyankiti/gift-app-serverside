@@ -44,7 +44,7 @@
                             <a class="nav-link" href="/home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/blog">Blog</a>
+                            <a class="nav-link" href="/blog?page=1">Blog</a>
                         </li>
                         @guest
                             @if (Route::has('login'))
