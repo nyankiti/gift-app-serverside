@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
 use Carbon\Carbon;
+use Google\Cloud\Core\Timestamp;
+
 
 
 class PostsController extends Controller
@@ -28,6 +30,9 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
+        // -----------------------------------------------------------------
+
+        // ------------------------------------------------------------------
         // クエリパラメータは以下の様に参照できる
         // dd($request->page);
         $onLastPage = null;
@@ -83,50 +88,71 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        // 入力された画像ファイルはinputとは別で扱われており、$request->image 独自のインスタンスにアクセスできる
-        // ----firestore への保存---------------------------------------------
-        // dd($request->input());
-
-        // $newsRef = app('firebase.firestore')->database()->collection('news')->document();
-
-        // // $stuRef = app('firebase.firestore')->database()->collection('student')->newDocument();
-        // $newsRef->set([
-        //     'title' => $input('title'),
-        //     'author' => '',
-        //     'imageUrl' => $request,
-        //     'html' => $value['html'],
-        //     'slug' => $value['slug'],
-        //     'user_id' => $value['user_id'],
-        //     'created_at' => $value['created_at'],
-        //     'updated_at' => $value['updated_at'],
-        // ]);
-
-
-        // -------------------------------------------------------------------
         $request->validate([
             'title' => 'required',
             'description' => 'required',
             'image' => 'required|mimes:jpg,png,jpeg|max:5048'
         ]);
 
-        // $uniqid() でユニークな16進数文字列を生成する
-        $newImageName = uniqid().'-'.$request->title.'.'.$request->image->extension();
+        // firestorageへの保存
+        // // 画像範囲はblobに変換してuploadする  $request->image->get() でblog形式の画像を取得できる
 
-        //以下のコードで受け取った画像をサーバーに保存できる
-        $request->image->move(public_path('images'), $newImageName);
+        $bucket = app('firebase.storage')->getBucket();
 
-        // $slug = SlugService::createSlug(Post::class, 'slug', $request->title);
-        // titleが英語でないとslugが生成されない、、、
-        $slug = SlugService::createSlug(Post::class, 'slug', $request->title);
-        // dd($slug);
+        // 画像の名前を決定
+        $now = new Carbon('now');
+        $dateString = str_replace(" ","" ,$now->toDateTimeString());
 
-        Post::create([
+        $newImageName = $dateString.'-'.$request->title.'.'.$request->image->clientExtension();
+        // 画像をfirestorageにupload
+        $object = $bucket->upload($request->image->get(), ['name' => 'news/'.$newImageName]);
+
+        // dd($bucket->object('news/'.$newImageName));
+        // 署名付きURLで参照できるがいつか期限が切れてしまう
+        // dd($object->signedUrl(new Timestamp(new Carbon('2050-01-01'))));
+        $downloadUrl = "https://firebasestorage.googleapis.com/v0/b/gift-app-project.appspot.com/o/news%2F".$newImageName."?alt=media";
+
+
+
+
+
+
+        // 新しい記事をfirestoreへ保存  imageUrlへには上でアップしたfirestorageのurlを格納する
+        $timestamp = new Timestamp($now);
+
+        $newsRef = app('firebase.firestore')->database()->collection('news')->Newdocument();
+        $newsRef->set([
             'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'slug' => $slug,
-            'image_path' => $newImageName,
-            'user_id' => \Auth::user()->getAuthIdentifier()
-        ]);
+            // authorはwebアプリでユーザー情報入力ゾーンを実装してから
+            'author' => '',
+            'imageUrl' => $downloadUrl,
+            'html' => $request->input('description'),
+            'slug' => $dateString,
+            'user_id' =>  \Auth::user()->getAuthIdentifier(),
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
+            ]);
+        // -------------------------------------------------------------------
+
+
+        // // $uniqid() でユニークな16進数文字列を生成する
+        // $newImageName = uniqid().'-'.$request->title.'.'.$request->image->extension();
+
+        // //以下のコードで受け取った画像をサーバーに保存できる
+        // $request->image->move(public_path('images'), $newImageName);
+
+        // // $slug = SlugService::createSlug(Post::class, 'slug', $request->title);
+        // // titleが英語でないとslugが生成されない、、、
+        // $slug = SlugService::createSlug(Post::class, 'slug', $request->title);
+        // // dd($slug);
+
+        // Post::create([
+        //     'title' => $request->input('title'),
+        //     'description' => $request->input('description'),
+        //     'slug' => $slug,
+        //     'image_path' => $newImageName,
+        //     'user_id' => \Auth::user()->getAuthIdentifier()
+        // ]);
 
         return redirect('/blog')
             ->with('message', 'Your post has been added!');
