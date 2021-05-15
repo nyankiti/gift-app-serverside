@@ -26,15 +26,8 @@
         <input type='text' name='title' placeholder='Title...' class='bg-transparent block border-b-2 w-full h-20 text-6xl outline-none mb-20' />
 
         <textarea id='mytextarea' name='description' placeholder='Description...' class='py-20 bg-transparent block border-b-2 w-full h-60 text-xl outline-none' ></textarea>
+        <input name=image type=file id="upload" onchange="" style="display: none" >
 
-        <div class='bg-gray-lighter pt-15'>
-            <label class='w-44 flex flex-col items-center px-2 py-3 bg-white-rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer'>
-                <span class='mt-2 text-base leading-nomal'>
-                    Select a file
-                </span>
-                <input type='file' name='image'class='hidden' >
-            </label>
-        </div>
 
         <button type='submit' class='uppercase bg-blue-500 text-gray-100 text-lg font-extrabold mt-16 py-4 px-8 rounded-3xl'>
             Submit Post
@@ -47,12 +40,32 @@
     <script>
         tinymce.init({
             selector: '#mytextarea',
-            menubar: true,
+            paste_data_images: true,
+            height: '800',
             plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
+                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                "searchreplace wordcount visualblocks visualchars code fullscreen",
+                "insertdatetime nonbreaking save table contextmenu directionality",
+                "emoticons template paste textcolor colorpicker textpattern"
             ],
+            toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+            toolbar2: "print preview media | forecolor backcolor emoticons",
+            image_advtab: true,
+            file_picker_callback: function(callback, value, meta) {
+                if (meta.filetype == 'image') {
+                $('#upload').trigger('click');
+                $('#upload').on('change', function() {
+                    var file = this.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                    callback(e.target.result, {
+                        alt: ''
+                    });
+                    };
+                    reader.readAsDataURL(file);
+                });
+                }
+            }
         })
     </script>
 
