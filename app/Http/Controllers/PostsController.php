@@ -181,6 +181,8 @@ class PostsController extends Controller
      */
     public function edit($slug)
     {
+        $article = app('firebase.firestore')->database()->collection('news')->where('slug', '=', $slug)->documents()->rows()[0]->data();
+
         return view('blog.edit')
             ->with('post', Post::where('slug', $slug)->first());
     }
