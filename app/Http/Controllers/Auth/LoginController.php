@@ -50,6 +50,7 @@ class LoginController extends Controller
     protected function login(Request $request) {
         try {
             $signInResult = $this->auth->signInWithEmailAndPassword($request['email'], $request['password']);
+            // dd($signInResult);
             $user = new User($signInResult->data());
 
             //firebase authenticationのuidを sessionに登録しておく

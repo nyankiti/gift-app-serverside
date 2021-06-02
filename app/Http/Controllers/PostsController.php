@@ -110,7 +110,7 @@ class PostsController extends Controller
         // dd($bucket->object('news/'.$newImageName));
         // 署名付きURLで参照できるがいつか期限が切れてしまう
         // dd($object->signedUrl(new Timestamp(new Carbon('2050-01-01'))));
-        $downloadUrl = "https://firebasestorage.googleapis.com/v0/b/gift-app-project.appspot.com/o/news%2F".$newImageName."?alt=media";
+        $storageUrl = "https://firebasestorage.googleapis.com/v0/b/gift-app-project.appspot.com/o/news%2F".$newImageName."?alt=media";
 
 
 
@@ -125,7 +125,7 @@ class PostsController extends Controller
             'title' => $request->input('title'),
             // authorはwebアプリでユーザー情報入力ゾーンを実装してから
             'author' => '',
-            'imageUrl' => $downloadUrl,
+            'imageUrl' => $storageUrl,
             'html' => $request->input('description'),
             'slug' => $dateString,
             'user_id' =>  \Auth::user()->getAuthIdentifier(),

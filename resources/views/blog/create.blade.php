@@ -32,7 +32,7 @@
                 <span class='mt-2 text-base leading-nomal'>
                     Select a file
                 </span>
-                <input type='file' name='image'class='hidden' >
+                <input type='file' name='image' class='hidden' >
             </label>
         </div>
 

@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FetchArticlesController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\ProfileController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +25,10 @@ Route::get('/', function () {
 Route::get('/home',  [PagesController::class, 'index']);
 Route::resource('/blog', PostsController::class);
 
+Route::get('/profile', [ProfileController::class, 'index']);
+Route::post('/profile', [ProfileController::class, 'create']);
+
+
 Route::get('/fetch_articles', [FetchArticlesController::class, 'index']);
 
 Route::get('/insert', function () {
@@ -35,6 +41,8 @@ Route::get('/insert', function () {
 });
 
 Auth::routes();
+
+
 
 Route::get('/default_home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
