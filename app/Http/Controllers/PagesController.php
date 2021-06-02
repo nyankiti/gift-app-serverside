@@ -8,14 +8,15 @@ class PagesController extends Controller
 {
     public function index()
     {
-        // dd(\Session::get('userImg'));
         // 画像などのユーザーのデータをSessionに保存する
-
-        if(\Session::get('user') == null or \Session::get('userImg') == null or \Auth::user() == null){
-            $user = app('firebase.firestore')->database()->collection('users')->document(\Auth::user()->localId)->snapshot()->data();
-            dd($user['userImg']);
-            \Session::put('user', $user['displayName']);
-            \Session::put('userImg', $user['userImg']);
+        if(\Session::get('user') == null or \Session::get('userImg') == null){
+            if(\Auth::user() == null){
+                // continue
+            }else{
+                $user = app('firebase.firestore')->database()->collection('users')->document(\Auth::user()->localId)->snapshot()->data();
+                \Session::put('user', $user['displayName']);
+                \Session::put('userImg', $user['userImg']);
+            }
         }
 
 
