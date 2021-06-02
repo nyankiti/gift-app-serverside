@@ -65,6 +65,7 @@ class RegisterController extends Controller
         $stuRef->set([
             "uid" => $createdUser->uid,
             "name" => $createdUser->displayName,
+            "displayName" => $createdUser->displayName,
             "fname" => '',
             "lname" => '',
             "email" => $createdUser->email,

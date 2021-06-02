@@ -47,7 +47,11 @@ class ProfileController extends Controller
             // 画像をfirestorageにupload
             $object = $bucket->upload($request->image->get(), ['name' => 'users/'.$newImageName]);
 
-            $storageUrl = "https://firebasestorage.googleapis.com/v0/b/gift-app-project.appspot.com/o/users%2F".$newImageName."?alt=media";
+            // 本番環境用
+            // $storageUrl = "https://firebasestorage.googleapis.com/v0/b/gift-app-project.appspot.com/o/users%2F".$newImageName."?alt=media";
+            // テスト環境用
+            $storageUrl = "https://firebasestorage.googleapis.com/v0/b/gift-app-project-test.appspot.com/o/users%2F".$newImageName."?alt=media";
+
         }
 
         // dd($storageUrl);

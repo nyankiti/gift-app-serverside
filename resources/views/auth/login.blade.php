@@ -7,15 +7,26 @@
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
       <script>
       // Initialize Firebase
-      var firebaseConfig = {
-        apiKey: "AIzaSyBJ9oQxVEPTC_l4oORFniW-7iTD56kgVTg",
-        authDomain: "gift-app-project.firebaseapp.com",
-        projectId: "gift-app-project",
-        storageBucket: "gift-app-project.appspot.com",
-        messagingSenderId: "13067451425",
-        appId: "1:13067451425:web:c36a5bbaa8e88022c0f760",
-        measurementId: "G-NMGTP4JM0S"
-      };
+    //   本番用
+    // var firebaseConfig = {
+    //     apiKey: "AIzaSyBJ9oQxVEPTC_l4oORFniW-7iTD56kgVTg",
+    //     authDomain: "gift-app-project.firebaseapp.com",
+    //     projectId: "gift-app-project",
+    //     storageBucket: "gift-app-project.appspot.com",
+    //     messagingSenderId: "13067451425",
+    //     appId: "1:13067451425:web:c36a5bbaa8e88022c0f760",
+    //     measurementId: "G-NMGTP4JM0S"
+    // };
+    // test用
+    var firebaseConfig = {
+        apiKey: "AIzaSyACkRk3l6k4Ezb5rHG7OI_xUnpdSVrmibU",
+        authDomain: "gift-app-project-test.firebaseapp.com",
+        projectId: "gift-app-project-test",
+        storageBucket: "gift-app-project-test.appspot.com",
+        messagingSenderId: "99012617470",
+        appId: "1:99012617470:web:f93a09d40406ece29271af",
+        measurementId: "G-V4EJ2DQP2G"
+    }
       firebase.initializeApp(config);
       var facebookProvider = new firebase.auth.FacebookAuthProvider();
       var googleProvider = new firebase.auth.GoogleAuthProvider();
