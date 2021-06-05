@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/app/google-calendar/service-account-credentials.json
 /vendor
 /resources/credentials/firebase_credentials.json
 /resources/credentials/firebase_credentials_test.json

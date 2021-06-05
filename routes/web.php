@@ -5,6 +5,8 @@ use App\Http\Controllers\FetchArticlesController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\BookingController;
 
 
 /*
@@ -32,20 +34,15 @@ Route::post('/profile', [ProfileController::class, 'create']);
 
 Route::get('/fetch_articles', [FetchArticlesController::class, 'index']);
 
-Route::get('/insert', function () {
-    $stuRef = app('firebase.firestore')->database()->collection('student')->newDocument();
-    $stuRef->set([
-        'firstname' => 'Seven',
-        'lastname' => 'Stac',
-        'age' => 19
-    ]);
-});
 
+// 認証関係---------------------------------------------------------------------------
 Auth::routes();
-
-
-
-Route::get('/default_home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::post('login/{provider}/callback', 'Auth\LoginController@handleCallback');
+// -----------------------------------------------------------------------------------
+
+
+// カレンダー-----------------------------------------------------------------------
+Route::get('/calendar', [CalendarController::class, 'index']);
+Route::resource('/booking', BookingController::class);
+// ---------------------------------------------------------------------------------
 
