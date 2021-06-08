@@ -1,0 +1,26 @@
+# docker composeのversionを指定
+version: "3.9"
+services:
+  app: #サービス名（任意なので変えても良い）
+    build: ./infra/php
+    # ホスト側の ./backend ディレクトリをappサービスのコンテナ内 /work へマウント（volumesパラメータ）
+    volumes:
+      - ./backend:/work
+
+  web:
+    image: nginx:1.20-alpine
+    # nginxへホスト側からコンテナ内へアクセスさせるための公開用ポートを設定（ホスト側:コンテナ側）
+    ports:
+      - 8080:80
+    volumes:
+      - ./backend:/work
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    working_dir: /work
+
+  db:
+    build: ./infra/mysql
+    volumes:
+      - db-store:/var/lib/mysql
+
+volumes:
+  db-store:
